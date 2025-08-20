@@ -1,5 +1,10 @@
 import os
-os.environ['SDL_VIDEODRIVER'] = os.environ.get('SDL_VIDEODRIVER', 'dummy')
+
+# Only use the headless "dummy" video driver when a display is not available.
+# This allows a real window to open in normal environments while still letting
+# the game run in testing or CI setups without a graphical display.
+if os.environ.get("DISPLAY", "") == "" and os.name != "nt" and not os.environ.get("SDL_VIDEODRIVER"):
+    os.environ["SDL_VIDEODRIVER"] = "dummy"
 import pygame
 from settings import WIDTH, HEIGHT, FPS
 from tiles import TileMap, LEVEL_DATA
